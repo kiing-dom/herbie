@@ -37,3 +37,20 @@ def process_folder(input_dir, output_dir, overwrite=False):
         features = extract_cqt(str(audio_file))
         if features is not None:
             np.save(output_path, features)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Extract CCQT features from audio files.")
+    parser.add_argument("--input", required=True, help="Input file or directory of audio files")
+    parser.add_argument("--output", default="features/", help="Where to save .npy features")
+    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
+    args = parser.parse_args()
+
+    if os.path.isdir(args.input):
+        process_folder(args.input, args.output, overwrite=args.overwrite)
+    elif os.path.isfile(args.input):
+        Path(args.output).mkdir(parents=True, exist_ok=True)
+        features = extract_cqt(args.input)
+        if features is not None:
+            np.save(Path(args.output) / (Path(args.input).stem + ".npy"), features)
+    else:
+        print(f"[ERROR] Input path not found: {args.input}")
