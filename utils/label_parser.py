@@ -1,5 +1,5 @@
 import numpy as np
-import os
+from utils.vocab import label_vector_to_indices
 
 def load_chord_annotations(filepath):
     """Load chord labels from a .lab or .txt file."""
@@ -25,4 +25,4 @@ def get_label_vector(chords, total_frames, sr=22050, hop_length=512):
                 break
         labels.append(label)
         
-    return np.array(labels)
+    return np.array(label_vector_to_indices(labels))
